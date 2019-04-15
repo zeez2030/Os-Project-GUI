@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QCheckBox,QSpinBox,QRadioButton,QLabel,QWidget, QApplication,QPushButton,QGroupBox,QHBoxLayout,QVBoxLayout
+from PyQt5.QtWidgets import QScrollArea,QCheckBox,QSpinBox,QRadioButton,QLabel,QWidget, QApplication,QPushButton,QGroupBox,QHBoxLayout,QVBoxLayout
 import  sys
 from PyQt5 import QtGui
 from operator import itemgetter
@@ -57,6 +57,7 @@ class Window(QWidget):
         self.pri.hide()
         self.pree = QCheckBox('Preemptive')
         self.nonpree=QCheckBox('Non-Preemptive')
+
         if self.SJF.isChecked():
             self.label = QLabel( "SJF")
             self.label.setFont(QtGui.QFont("sanserif", 20))
@@ -98,39 +99,42 @@ class Window(QWidget):
         self.timeShots = list()
         self.timeInserted=list()
         self.pirority=list()
+        self.groupbox2 = QGroupBox("Process's info")
+        self.groupbox2.setFont(QtGui.QFont("sanserif", 15))
+        self.vbox2 = QVBoxLayout()
         if self.nonpree.isChecked():
             self.pree.hide()
             self.nonpree.hide()
             self.label = QLabel("Type : "+self.nonpree.text())
             self.label.setFont(QtGui.QFont("sanserif", 15))
-            self.vbox.addWidget(self.label)
+            self.vbox2.addWidget(self.label)
         elif self.pree.isChecked():
             self.pree.hide()
             self.nonpree.hide()
             self.label = QLabel("Type : "+self.pree.text())
             self.label.setFont(QtGui.QFont("sanserif", 15))
-            self.vbox.addWidget(self.label)
+            self.vbox2.addWidget(self.label)
         for j in range(i):
             self.label = QLabel("P"+str(j+1))
             self.lList.append(self.label)
             self.label.setFont(QtGui.QFont("sanserif",15))
-            self.vbox.addWidget(self.label)
+            self.vbox2.addWidget(self.label)
             self.label = QLabel("Burst Time")
             self.timeShots.append(self.label)
             self.label.setFont(QtGui.QFont("sanserif",13))
             self.textbox = QSpinBox(self)
             self.tList.append(self.textbox)
-            self.vbox.addWidget(self.label)
-            self.vbox.addWidget(self.textbox)
+            self.vbox2.addWidget(self.label)
+            self.vbox2.addWidget(self.textbox)
 
             if not( self.pri.isChecked() and self.nonpree.isChecked()) :
                 self.label = QLabel("Arrival Time:")
                 self.timeShots.append(self.label)
                 self.label.setFont(QtGui.QFont("sanserif", 13))
-                self.vbox.addWidget(self.label)
+                self.vbox2.addWidget(self.label)
                 self.textbox = QSpinBox(self)
                 self.timeInserted.append(self.textbox)
-                self.vbox.addWidget(self.textbox)
+                self.vbox2.addWidget(self.textbox)
 
 
             if self.pri.isChecked():
@@ -139,20 +143,26 @@ class Window(QWidget):
                 self.label.setFont(QtGui.QFont("sanserif", 13))
                 self.textbox = QSpinBox(self)
                 self.pirority.append(self.textbox)
-                self.vbox.addWidget(self.label)
-                self.vbox.addWidget(self.textbox)
+                self.vbox2.addWidget(self.label)
+                self.vbox2.addWidget(self.textbox)
         if self.RR.isChecked() or (self.pri.isChecked() and self.nonpree.isChecked()):
             self.label = QLabel("Time Quantum:")
             self.label.setFont(QtGui.QFont("sanserif", 15))
             self.timeShots.append(self.label)
-            self.vbox.addWidget(self.label)
+            self.vbox2.addWidget(self.label)
             self.textbox = QSpinBox(self)
             self.tList.append(self.textbox)
-            self.vbox.addWidget(self.textbox)
+            self.vbox2.addWidget(self.textbox)
         self.button.hide()
         self.button = QPushButton("Draw", self)
         self.button.clicked.connect(self.Draw)
-        self.vbox.addWidget(self.button)
+        self.vbox2.addWidget(self.button)
+        self.groupbox2.setLayout(self.vbox2)
+        self.scroll = QScrollArea()
+        self.scroll.setWidget(self.groupbox2)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setFixedWidth(600)
+        self.hbox.addWidget(self.scroll)
     def Draw(self):
         df=list()
         self.button.hide()
@@ -594,6 +604,7 @@ class Window(QWidget):
         self.button.hide()
         self.labelTime.hide()
         self.groupbox.hide()
+        self.scroll.hide()
         self.initBox()
 
 
